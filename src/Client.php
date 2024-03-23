@@ -67,7 +67,7 @@ class Client
     {
         $this->setHttpClient($httpClient ?? HttpClient::create());
         $this->applyHttpClientDefaultOptions();
-        $this->cacheAvailableDomains();
+        $this->retrieveAndCacheMailDomains();
     }
 
     /**
@@ -102,9 +102,9 @@ class Client
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function cacheAvailableDomains(): void
+    public function retrieveAndCacheMailDomains(): void
     {
-        $this->availableDomains = $this->retrieveAvailableDomains();
+        $this->availableDomains = $this->retrieveMailDomains();
     }
 
     /**
@@ -114,7 +114,7 @@ class Client
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function retrieveAvailableDomains(): array
+    public function retrieveMailDomains(): array
     {
         $result = $this->httpClient->request('GET', 'request/domains/')->toArray(false);
 
@@ -144,7 +144,7 @@ class Client
     /**
      * @return array
      */
-    public function getCachedDomains(): array
+    public function getCachedMailDomains(): array
     {
         return $this->availableDomains;
     }
