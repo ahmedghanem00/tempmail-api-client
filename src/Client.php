@@ -15,6 +15,7 @@ use ahmedghanem00\TempMailClient\Model\ReceiverAddress;
 use Arrayy\Arrayy;
 use InvalidArgumentException;
 use PHLAK\StrGen\Generator;
+use SensitiveParameter;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -36,7 +37,7 @@ class Client
     /**
      * @var int
      */
-    public const DEFAULT_HTTP_TIMEOUT = 15;
+    public const DEFAULT_HTTP_CLIENT_TIMEOUT = 15;
 
     /**
      * @var int
@@ -61,38 +62,66 @@ class Client
      * @throws ClientExceptionInterface
      */
     public function __construct(
-        private readonly string $apiKey,
-        ?HttpClientInterface    $httpClient = null
+        #[SensitiveParameter]
+        string               $apiKey,
+        ?HttpClientInterface $httpClient = null
     )
     {
         $this->setHttpClient($httpClient ?? HttpClient::create());
-        $this->applyHttpClientDefaultOptions();
+
+        $this->setApiKey($apiKey);
+        $this->setRapidAPIHost(self::RAPID_API_HOST);
+        $this->setHttpClientTimeout(self::DEFAULT_HTTP_CLIENT_TIMEOUT);
+
         $this->retrieveAndCacheMailDomains();
     }
 
     /**
+     * @param string $apiKey
      * @return void
      */
-    private function applyHttpClientDefaultOptions(): void
+    public function setApiKey(#[SensitiveParameter] string $apiKey): void
     {
         $this->applyHttpClientOptions([
             'headers' => [
-                'X-RapidAPI-Host' => self::RAPID_API_HOST,
-                'X-RapidAPI-Key' => $this->apiKey
-            ],
-
-            'base_uri' => 'https://' . self::RAPID_API_HOST,
-            'timeout' => self::DEFAULT_HTTP_TIMEOUT
+                'X-RapidAPI-Key' => $apiKey
+            ]
         ]);
     }
 
     /**
-     * @param array $options
+     * @param array<string, string|array> $options
      * @return void
      */
     public function applyHttpClientOptions(array $options): void
     {
         $this->httpClient = $this->httpClient->withOptions($options);
+    }
+
+    /**
+     * @param string $hostname
+     * @return void
+     */
+    public function setRapidAPIHost(string $hostname): void
+    {
+        $this->applyHttpClientOptions([
+            'headers' => [
+                'X-RapidAPI-Host' => $hostname
+            ],
+
+            'base_uri' => 'https://' . $hostname
+        ]);
+    }
+
+    /**
+     * @param int $timeout
+     * @return void
+     */
+    public function setHttpClientTimeout(int $timeout): void
+    {
+        $this->applyHttpClientOptions([
+            'timeout' => $timeout
+        ]);
     }
 
     /**
