@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -25,12 +27,11 @@ class TempMailClientException extends RuntimeException
      * @param array $additionalData
      */
     public function __construct(
-        string        $message = "",
-        int           $code = 0,
-        Throwable     $previous = null,
+        string $message = "",
+        int $code = 0,
+        Throwable $previous = null,
         private array $additionalData = []
-    )
-    {
+    ) {
         parent::__construct($message, $code, $previous);
     }
 
