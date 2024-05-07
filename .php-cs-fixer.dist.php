@@ -18,7 +18,8 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
-        '@PSR12:risky' => true
+        '@PSR12:risky' => true,
+        'line_ending' => false,
     ])
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
