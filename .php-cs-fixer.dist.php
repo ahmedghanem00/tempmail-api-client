@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $header = <<<EOF
-This file is part of TempMailClient package.
+This file is part of the TempMailClient package.
 
 (c) Ahmed Ghanem <ahmedghanem7361@gmail.com>
 
@@ -12,14 +12,14 @@ file that was distributed with this source code.
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__)
+    ->in(__DIR__ . '/src')
+    ->in(__DIR__ . '/tests')
     ->ignoreVCSIgnored(true);
 
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
-        '@PSR12:risky' => true,
-        'line_ending' => false,
+        '@PSR12:risky' => true
     ])
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
