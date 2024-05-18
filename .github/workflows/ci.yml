@@ -4,9 +4,6 @@ on:
   - push
   - pull_request
 
-permissions:
-  contents: read
-
 jobs:
   tests:
     name: Tests
@@ -26,10 +23,6 @@ jobs:
           - 8.3
 
     steps:
-      - name: Configure Git to avoid issues with line endings
-        if: matrix.os == 'windows-latest'
-        run: git config --global core.autocrlf false
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -42,11 +35,11 @@ jobs:
       - name: Install dependencies with Composer
         run: composer install --prefer-dist --no-ansi --no-interaction --no-progress
 
-      - name: Running PHP-CS-Fixer in Linter Mode
+      - name: Run PHP-CS-Fixer in Linter Mode
         run: composer run-script php-cs-fixer -- --dry-run --show-progress=dots --using-cache=no --verbose
 
-      - name: Running PHPStan
+      - name: Run PHPStan
         run: composer run-script phpstan
 
-      - name: Running test-suites
+      - name: Run test-suites
         run: composer run-script test
