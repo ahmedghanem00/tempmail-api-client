@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -8,17 +10,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ahmedghanem00\TempMailClient\Tests\unit\Model;
+namespace ahmedghanem00\TempMailClient\Tests\Unit;
 
+use ahmedghanem00\TempMailClient\Client;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-class InboxTest extends TestCase
+#[CoversClass(Client::class)]
+class ClientTest extends TestCase
 {
-    /**
-     * @covers Inbox::retrieveAll
-     * @return void
-     */
-    public function testRetrieveAll(): void
+    public function testLoadReceiverAddress()
     {
         $this->assertTrue(true);
     }

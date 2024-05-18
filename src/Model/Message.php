@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -18,13 +20,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 readonly class Message
 {
     /**
-     * @param array $messageData
+     * @param array<string, mixed> $messageData
      */
     public function __construct(
         private array $messageData
-    )
-    {
-
+    ) {
     }
 
     /**
@@ -124,7 +124,7 @@ readonly class Message
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection<int, AttachmentInfo>
      */
     public function getAttachments(): ArrayCollection
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -12,7 +14,6 @@ namespace ahmedghanem00\TempMailClient\Model;
 
 use ahmedghanem00\TempMailClient\Exception\ResultErrorException;
 use Doctrine\Common\Collections\ArrayCollection;
-use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -31,17 +32,18 @@ readonly class Inbox
      */
     public function __construct(
         private HttpClientInterface $httpClient,
-        private string              $emailAddress
-    )
-    {
+        private string $emailAddress
+    ) {
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @return ArrayCollection<int, Message>
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     *
+     * @throws TransportExceptionInterface
      */
     public function retrieveAll(): ArrayCollection
     {
@@ -62,6 +64,7 @@ readonly class Inbox
 
     /**
      * @param array $jsonResult
+     *
      * @return void
      */
     private function checkResultForError(array $jsonResult): void
@@ -72,27 +75,13 @@ readonly class Inbox
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
+     * @param string $messageId
+     * @return Message
      * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws Exception
-     */
-    public function retrieveMessageSource(string $messageId): array
-    {
-        $jsonResult = $this->httpClient->request("GET", "request/source/id/$messageId/")->toArray(false);
-
-        $this->checkResultForError($jsonResult);
-
-        return $jsonResult;
-    }
-
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     *
      * @throws ClientExceptionInterface
      */
     public function retrieveMessage(string $messageId): Message
@@ -105,11 +94,13 @@ readonly class Inbox
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @return ArrayCollection<int, Attachment>
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     *
+     * @throws TransportExceptionInterface
      */
     public function retrieveAttachmentsForMessage(string $messageId): ArrayCollection
     {
@@ -128,15 +119,20 @@ readonly class Inbox
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @return Attachment
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     *
+     * @throws TransportExceptionInterface
      */
     public function retrieveMessageAttachment(string $messageId, string $attachmentId): Attachment
     {
-        $jsonResult = $this->httpClient->request("GET", "/request/one_attachment/id/$messageId/$attachmentId/")->toArray(false);
+        $jsonResult = $this->httpClient->request(
+            "GET",
+            "/request/one_attachment/id/$messageId/$attachmentId/"
+        )->toArray(false);
 
         $this->checkResultForError($jsonResult);
 
@@ -159,5 +155,24 @@ readonly class Inbox
         if (($resultMsg = @$jsonResult['result']) !== 'success') {
             throw new ResultErrorException("Failed operation. Received result from endpoint ( $resultMsg )");
         }
+    }
+
+    /**
+     * @param string $messageId
+     * @return array
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     *
+     * @throws DecodingExceptionInterface
+     */
+    public function retrieveMessageSource(string $messageId): array
+    {
+        $jsonResult = $this->httpClient->request("GET", "request/source/id/$messageId/")->toArray(false);
+
+        $this->checkResultForError($jsonResult);
+
+        return $jsonResult;
     }
 }

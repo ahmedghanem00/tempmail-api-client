@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -20,8 +22,7 @@ readonly class AttachmentInfo
      */
     public function __construct(
         private array $attachmentInfo
-    )
-    {
+    ) {
     }
 
     /**

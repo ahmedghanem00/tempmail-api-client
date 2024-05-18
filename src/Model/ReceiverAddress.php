@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -34,9 +36,8 @@ readonly class ReceiverAddress
      */
     public function __construct(
         private HttpClientInterface $httpClient,
-        private string              $emailAddress
-    )
-    {
+        private string $emailAddress
+    ) {
         if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException("the provided email address ( $emailAddress ) isn't in a valid format");
         }

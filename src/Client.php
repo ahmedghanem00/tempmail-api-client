@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -50,7 +52,7 @@ class Client
     private HttpClientInterface $httpClient;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private array $availableDomains;
 
@@ -63,10 +65,9 @@ class Client
      */
     public function __construct(
         #[SensitiveParameter]
-        string               $apiKey,
+        string $apiKey,
         ?HttpClientInterface $httpClient = null
-    )
-    {
+    ) {
         $this->setHttpClient($httpClient ?? HttpClient::create());
 
         $this->setApiKey($apiKey);
@@ -90,7 +91,8 @@ class Client
     }
 
     /**
-     * @param array<string, string|array> $options
+     * @param array<string, mixed> $options
+     *
      * @return void
      */
     public function applyHttpClientOptions(array $options): void
@@ -137,11 +139,13 @@ class Client
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @return array<int, string>
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     *
+     * @throws TransportExceptionInterface
      */
     public function retrieveMailDomains(): array
     {
@@ -171,7 +175,7 @@ class Client
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      */
     public function getCachedMailDomains(): array
     {
@@ -180,6 +184,7 @@ class Client
 
     /**
      * @param int $emailNameLength
+     *
      * @return ReceiverAddress
      */
     public function generateFullyRandomReceiver(int $emailNameLength = 10): ReceiverAddress
@@ -191,6 +196,7 @@ class Client
 
     /**
      * @param string $emailName
+     *
      * @return ReceiverAddress
      */
     public function generateRandomReceiverFromEmailName(string $emailName): ReceiverAddress
@@ -198,7 +204,9 @@ class Client
         $maxAllowedLength = self::MAX_EMAIL_NAME_LENGTH;
 
         if ($emailName && (($emailNameLength = mb_strlen($emailName)) > $maxAllowedLength)) {
-            throw new InvalidArgumentException("Given email name has a length ( $emailNameLength ) which is larger than the allowed ( $maxAllowedLength )");
+            throw new InvalidArgumentException(
+                "Given email name has a length ( $emailNameLength ) which is larger than the allowed ( $maxAllowedLength )"
+            );
         }
 
         $randomEmailDomain = Arrayy::createFromArray($this->availableDomains)->randomValue();
@@ -208,6 +216,7 @@ class Client
 
     /**
      * @param string $emailAddress
+     *
      * @return ReceiverAddress
      */
     public function loadReceiverAddress(string $emailAddress): ReceiverAddress

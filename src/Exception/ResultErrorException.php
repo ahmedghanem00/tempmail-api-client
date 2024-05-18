@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TempMailClient package.
  *
@@ -15,5 +17,4 @@ namespace ahmedghanem00\TempMailClient\Exception;
  */
 class ResultErrorException extends TempMailClientException
 {
-
 }
