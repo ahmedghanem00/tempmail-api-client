@@ -41,5 +41,8 @@ jobs:
       - name: Run PHPStan
         run: composer run-script phpstan
 
+      - name: Local PHP Security Checker
+        uses: docker://pplotka/local-php-security-checker-github-actions
+
       - name: Run test-suites
         run: composer run-script test
